@@ -11,7 +11,7 @@ resource "aws_security_group" "istory_rds_sg" {
     security_groups = [
       aws_security_group.istory_nginx_sg.id,
       aws_security_group.istory_prod_ec2_sg.id 
-      ]
+    ]
   }
 
   egress {
