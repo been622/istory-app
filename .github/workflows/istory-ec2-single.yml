@@ -1,4 +1,4 @@
-#2
+#5
 name: istory ci/cd dev pipeline
 
 permissions:
@@ -8,16 +8,16 @@ permissions:
 
 on:
   push:
-    branches: [ "main"]
+    branches: [ "test"]
     paths:
-      - 'xinfra/istory-ec2-single/**'
-      - '.github/workflows/istory-ec2-single.yml'
+      - 'xinfra/ec2-scaling/**'
+      - '.github/workflows/ec2-scaling-deploy.yml'
       - 'scripts/**'
       - 'appspec.yml'
 jobs:
   build-and-upload:
     runs-on: ubuntu-latest
-    environment: dev
+    environment: prod
     steps:
       - name: 배포용 소스 다운로드
         uses: actions/checkout@v4
@@ -93,7 +93,7 @@ jobs:
         run: |
           DEPLOYMENTS=$(aws deploy list-deployments \
             --application-name istory-app \
-            --deployment-group-name istory-deploy-group \
+            --deployment-group-name istory-prod-deploy-group \
             --include-only-statuses "InProgress" \
             --query 'deployments[]' \
             --output text)
@@ -111,8 +111,9 @@ jobs:
         run: |
           DEPLOYMENT_ID=$(aws deploy create-deployment \
             --application-name istory-app \
-            --deployment-group-name istory-deploy-group \
+            --deployment-group-name istory-prod-deploy-group \
             --s3-location bucket=${{ secrets.AWS_S3_BUCKET }},key=deploy/deploy.zip,bundleType=zip \
+            --deployment-config-name CodeDeployDefault.OneAtATime \
             --output text \
             --query 'deploymentId')
           echo "deployment_id=${DEPLOYMENT_ID}" >> $GITHUB_OUTPUT
