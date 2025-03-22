@@ -11,7 +11,7 @@ on:
     branches: [ "main"]
     paths:
       - 'xinfra/istory-ec2-single/**'
-      - '.github/workflows/ec2-single.yml'
+      - '.github/workflows/istory-ec2-single.yml'
       - 'scripts/**'
       - 'appspec.yml'
 jobs:
